@@ -104,6 +104,7 @@ const CampsiteInfoScreen = ({ route }) => {
             leftIcon={{ type: "font-awesome", name: "user-o" }}
             leftIconContainerStyle={{ paddingRight: 10 }}
             onChangeText={(author) => setAuthor(author)}
+            value={author}
           />
 
           <Input
@@ -111,6 +112,7 @@ const CampsiteInfoScreen = ({ route }) => {
             leftIcon={{ type: "font-awesome", name: "comment-o" }}
             leftIconContainerStyle={{ paddingRight: 10 }}
             onChangeText={(text) => setText(text)}
+            value={comments}
           />
 
           <View style={{ margin: 10 }}>
@@ -128,6 +130,7 @@ const CampsiteInfoScreen = ({ route }) => {
             <Button
               onPress={() => {
                 setShowModal(!showModal);
+                resetForm();
               }}
               color="#808080"
               title="Cancel"
