@@ -1,8 +1,8 @@
-import { useRef } from "react";
-import { StyleSheet, Text, View, PanResponder, Alert } from "react-native";
+import { Text, View, StyleSheet, PanResponder, Alert } from "react-native";
 import { Card, Icon } from "react-native-elements";
 import { baseUrl } from "../../shared/baseUrl";
 import * as Animatable from "react-native-animatable";
+import { useRef } from "react";
 
 const RenderCampsite = (props) => {
   const { campsite } = props;
@@ -10,6 +10,7 @@ const RenderCampsite = (props) => {
   const view = useRef();
 
   const isLeftSwipe = ({ dx }) => dx < -200;
+  const isRightSwipe = ({ dx }) => dx > 200;
 
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
@@ -29,8 +30,8 @@ const RenderCampsite = (props) => {
           [
             {
               text: "Cancel",
-              style: "cancel",
               onPress: () => console.log("Cancel Pressed"),
+              style: "cancel",
             },
             {
               text: "OK",
@@ -42,6 +43,8 @@ const RenderCampsite = (props) => {
           ],
           { cancelable: false }
         );
+      } else if (isRightSwipe(gestureState)) {
+        props.onShowModal();
       }
     },
   });
@@ -57,8 +60,16 @@ const RenderCampsite = (props) => {
       >
         <Card containerStyle={styles.cardContainer}>
           <Card.Image source={{ uri: baseUrl + campsite.image }}>
-            <View style={{ justifyContent: "center", flex: 1 }}>
-              <Text style={styles.cardText}>{campsite.name}</Text>
+            <View style={styles.cardText}>
+              <Text
+                style={{
+                  color: "white",
+                  textAlign: "center",
+                  fontSize: 20,
+                }}
+              >
+                {campsite.name}
+              </Text>
             </View>
           </Card.Image>
           <Text style={{ margin: 20 }}>{campsite.description}</Text>
@@ -76,12 +87,12 @@ const RenderCampsite = (props) => {
               }
             />
             <Icon
-              name="pencil"
+              name={"pencil"}
               type="font-awesome"
               color="#5637DD"
               raised
               reverse
-              onPress={props.onShowModal}
+              onPress={() => props.onShowModal()}
             />
           </View>
         </Card>
