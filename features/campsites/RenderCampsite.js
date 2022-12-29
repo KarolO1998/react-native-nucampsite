@@ -1,8 +1,15 @@
-import { Text, View, StyleSheet, PanResponder, Alert } from "react-native";
+import { useRef } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  PanResponder,
+  Alert,
+  Share,
+} from "react-native";
 import { Card, Icon } from "react-native-elements";
 import { baseUrl } from "../../shared/baseUrl";
 import * as Animatable from "react-native-animatable";
-import { useRef } from "react";
 
 const RenderCampsite = (props) => {
   const { campsite } = props;
@@ -30,8 +37,8 @@ const RenderCampsite = (props) => {
           [
             {
               text: "Cancel",
-              onPress: () => console.log("Cancel Pressed"),
               style: "cancel",
+              onPress: () => console.log("Cancel Pressed"),
             },
             {
               text: "OK",
@@ -49,6 +56,19 @@ const RenderCampsite = (props) => {
     },
   });
 
+  const shareCampsite = (title, message, url) => {
+    Share.share(
+      {
+        title,
+        message: `${title}: ${message} ${url}`,
+        url,
+      },
+      {
+        dialogTitle: "Share " + title,
+      }
+    );
+  };
+
   if (campsite) {
     return (
       <Animatable.View
@@ -60,16 +80,8 @@ const RenderCampsite = (props) => {
       >
         <Card containerStyle={styles.cardContainer}>
           <Card.Image source={{ uri: baseUrl + campsite.image }}>
-            <View style={styles.cardText}>
-              <Text
-                style={{
-                  color: "white",
-                  textAlign: "center",
-                  fontSize: 20,
-                }}
-              >
-                {campsite.name}
-              </Text>
+            <View style={{ justifyContent: "center", flex: 1 }}>
+              <Text style={styles.cardText}>{campsite.name}</Text>
             </View>
           </Card.Image>
           <Text style={{ margin: 20 }}>{campsite.description}</Text>
@@ -87,12 +99,26 @@ const RenderCampsite = (props) => {
               }
             />
             <Icon
-              name={"pencil"}
+              name="pencil"
               type="font-awesome"
               color="#5637DD"
               raised
               reverse
-              onPress={() => props.onShowModal()}
+              onPress={props.onShowModal}
+            />
+            <Icon
+              name="share"
+              type="font-awesome"
+              color="#5637DD"
+              raised
+              reverse
+              onPress={() =>
+                shareCampsite(
+                  campsite.name,
+                  campsite.description,
+                  baseUrl + campsite.image
+                )
+              }
             />
           </View>
         </Card>
